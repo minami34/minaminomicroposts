@@ -18,11 +18,6 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password', 'remember_token',
     ];
@@ -56,9 +51,10 @@ class User extends Authenticatable
             // follow if not following
             $this->followings()->attach($userId);
             return true;
-        }
+            }
     }
 
+    
     public function unfollow($userId)
     {
         // confirming if already following
@@ -87,4 +83,37 @@ class User extends Authenticatable
         return Micropost::whereIn('user_id', $follow_user_ids);
     }
     
+    public function favorites()
+    {
+        return $this->belongsToMany(Micropost::class, 'micropost_user', 'user_id', 'micropost_id')->withTimestamps();
+    }
+
+    public function is_favorite($postId) 
+    {
+        return $this->favorites()->where('micropost_id', $postId)->exists();
+    }
+    
+    public function favorite($postId)
+    {
+        $exist = $this->is_favorite($postId);
+
+        if($exist){
+            return false;
+        } else {
+            $this->favorites()->attach($postId);
+            return true;
+        }
+    }
+
+    public function unfavorite($postId)
+    {
+        $exist = $this->is_favorite($postId);
+
+        if($exist){
+            $this->favorites()->detach($postId);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

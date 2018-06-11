@@ -19,6 +19,7 @@
                             <ul class="dropdown-menu">
                                 <li><a href="{{ route('users.show', ['id' => Auth::user()->id]) }}">My profile</a></li>
                                 <li role="separator" class="divider"></li>
+                                <li><a href="{{ route('users.favorites', ['id' => Auth::user()->id]) }}">Favorites</a></li>
                                 <li>{!! link_to_route('logout.get', 'Logout') !!}</li>
                             </ul>
                         </li>
